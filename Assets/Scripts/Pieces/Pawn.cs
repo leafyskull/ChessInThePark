@@ -23,17 +23,17 @@ public class Pawn : Piece
         
         switch (this.GetColor()){
             case Color.White:
-                front = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.North));
-                doubleFront = new Coordinate(front.GetNeighborCoordinate(Direction.North));
-                frontRight = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.NorthEast));
-                frontLeft = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.NorthWest));
+                front = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.North));
+                doubleFront = Board.Instance.GetCoordinate(front.GetNeighborCoordinate(Direction.North));
+                frontRight = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.NorthEast));
+                frontLeft = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.NorthWest));
 
                 break;
             case Color.Black:
-                front = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.South));
-                doubleFront = new Coordinate(front.GetNeighborCoordinate(Direction.South));
-                frontRight = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.SouthWest));
-                frontLeft = new Coordinate(currentCoordinate.GetNeighborCoordinate(Direction.SouthEast));
+                front = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.South));
+                doubleFront = Board.Instance.GetCoordinate(front.GetNeighborCoordinate(Direction.South));
+                frontRight = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.SouthWest));
+                frontLeft = Board.Instance.GetCoordinate(currentCoordinate.GetNeighborCoordinate(Direction.SouthEast));
 
                 break;
         }

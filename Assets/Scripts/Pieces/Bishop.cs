@@ -125,7 +125,7 @@ public class Bishop : Piece
             {
                 validCoordinates.Add(southWestNeighbor);
                 southWestRow = southWestNeighbor.GetNeighborCoordinate(Direction.South).getRow();
-                southWestColumn = southWestNeighbor.GetNeighborCoordinate(Direction.East).getColumn();
+                southWestColumn = southWestNeighbor.GetNeighborCoordinate(Direction.West).getColumn();
                 southWestNeighbor = new Coordinate(southWestColumn, southWestRow);
                 southWestNeighbor = Board.Instance.GetCoordinate(southWestNeighbor);
             }
