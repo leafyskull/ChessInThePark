@@ -14,23 +14,24 @@ public class Board : MonoBehaviour
     private const int numColumns = 8;
     [SerializeField] private float tileSize = 1.0f;
     [SerializeField] private Vector3 boardOrigin = Vector3.zero;
+    [SerializeField] private Transform piecesParent;
 
 
 
 
     private List<Piece> pieces;
-    [SerializeField] private GameObject whitePawnPrefab;
-    [SerializeField] private GameObject blackPawnPrefab;
-    [SerializeField] private GameObject whiteKnightPrefab;
-    [SerializeField] private GameObject blackKnightPrefab;
-    [SerializeField] private GameObject whiteRookPrefab;
-    [SerializeField] private GameObject blackRookPrefab;
-    [SerializeField] private GameObject whiteBishopPrefab;
-    [SerializeField] private GameObject blackBishopPrefab;
-    [SerializeField] private GameObject whiteQueenPrefab;
-    [SerializeField] private GameObject blackQueenPrefab;
-    [SerializeField] private GameObject whiteKingPrefab;
-    [SerializeField] private GameObject blackKingPrefab;
+    [SerializeField] private Piece whitePawnPrefab;
+    [SerializeField] private Piece blackPawnPrefab;
+    [SerializeField] private Piece whiteKnightPrefab;
+    [SerializeField] private Piece blackKnightPrefab;
+    [SerializeField] private Piece whiteRookPrefab;
+    [SerializeField] private Piece blackRookPrefab;
+    [SerializeField] private Piece whiteBishopPrefab;
+    [SerializeField] private Piece blackBishopPrefab;
+    [SerializeField] private Piece whiteQueenPrefab;
+    [SerializeField] private Piece blackQueenPrefab;
+    [SerializeField] private Piece whiteKingPrefab;
+    [SerializeField] private Piece blackKingPrefab;
 
 
     void Awake()
@@ -87,12 +88,12 @@ public class Board : MonoBehaviour
 
     }
 
-    private Piece SpawnPiece(GameObject piecePrefab, Column column, Row row, Color color)
+    private Piece SpawnPiece(Piece piecePrefab, Column column, Row row, Color color)
     {
         Coordinate coord = this.GetCoordinate(column, row);
 
         // TODO: Set coordinates and transform in world.
-        Piece newPiece = Instantiate(piecePrefab, pieceParent);
+        Piece newPiece = Instantiate(piecePrefab, piecesParent);
         newPiece.Initialize(color, coord);
 
         this.MovePiece(newPiece, coord);
@@ -157,17 +158,19 @@ public class Board : MonoBehaviour
         return (piece!= null && piece.GetColor() != pieceColor);
     }
 
-    public bool CanKingMoveToThisCoordinate(Color kingColor, Coordinate coord)
+    // IsReachableByEnemy(): Used for king's movement, to see if enemy is
+    // able to "take"/reach a coordinate.
+    public bool IsReachableByEnemy(Coordinate coord, Color pieceColor)
     {
-        bool canMove = true;
+        bool isReachableByEnemy = false;
 
         foreach (Piece piece in pieces)
         {
-            if (piece.GetColor() != kingColor && piece.CanReach(coord))
-                canMove = false;
+            if (piece.CanReach(coord) && piece.GetColor() != pieceColor)
+                isReachableByEnemy = true;
         }
 
-        return canMove;
+        return isReachableByEnemy;
     }
 
     public void MovePiece(Piece piece, Coordinate target)

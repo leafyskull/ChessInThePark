@@ -10,7 +10,9 @@ public class Bishop : Piece
 
     public override bool CanReach(Coordinate coord)
     {
-        Coordinate currentCoordinate = this.getCoordinate();
+        Board board = Board.Instance;
+
+        Coordinate currentCoordinate = this.GetCoordinate();
         List<Coordinate> validCoordinates = new List<Coordinate>();
         bool canMove = false;
 
@@ -20,110 +22,110 @@ public class Bishop : Piece
             // If occupied with friendly, stop
 
         // NorthEast
-        Row northEastRow = currentCoordinate.GetNeighborCoordinate(Direction.North).getRow();
-        Column northEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).getColumn();
+        Row northEastRow = currentCoordinate.GetNeighborCoordinate(Direction.North).GetRow();
+        Column northEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).GetColumn();
         Coordinate northEastNeighbor = new Coordinate(northEastColumn, northEastRow);
-        northEastNeighbor = Board.Instance.GetCoordinate(northEastNeighbor);
+        northEastNeighbor = board.GetCoordinate(northEastNeighbor);
         while (northEastNeighbor != null)
         {
             // Occupied by friendly - stop
-            if (northEastNeighbor.IsOccupied() && northEastNeighbor.GetOccupiedColor() == this.GetColor()){
+            if (board.IsOccupiedByFriendly(northEastNeighbor, this.GetColor())){
                 break;
             }
             // Occupied by enemy - add to valid moves and stop
-            if (northEastNeighbor.IsOccupied() && northEastNeighbor.GetOccupiedColor() != this.GetColor())
+            if (board.IsOccupiedByEnemy(northEastNeighbor, this.GetColor()))
             {
                 validCoordinates.Add(northEastNeighbor);
                 break;
             }
             // Unoccupied - add to valid moves and continue
-            if (!northEastNeighbor.IsOccupied())
+            if (!board.IsOccupied(northEastNeighbor))
             {
                 validCoordinates.Add(northEastNeighbor);
-                northEastRow = northEastNeighbor.GetNeighborCoordinate(Direction.North).getRow();
-                northEastColumn = northEastNeighbor.GetNeighborCoordinate(Direction.East).getColumn();
+                northEastRow = northEastNeighbor.GetNeighborCoordinate(Direction.North).GetRow();
+                northEastColumn = northEastNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
                 northEastNeighbor = new Coordinate(northEastColumn, northEastRow);
-                northEastNeighbor = Board.Instance.GetCoordinate(northEastNeighbor);
+                northEastNeighbor = board.GetCoordinate(northEastNeighbor);
             }
         }
 
         // NorthWest
-        Row northWestRow = currentCoordinate.GetNeighborCoordinate(Direction.North).getRow();
-        Column northWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).getColumn();
+        Row northWestRow = currentCoordinate.GetNeighborCoordinate(Direction.North).GetRow();
+        Column northWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).GetColumn();
         Coordinate northWestNeighbor = new Coordinate(northWestColumn, northWestRow);
-        northWestNeighbor = Board.Instance.GetCoordinate(northWestNeighbor);
+        northWestNeighbor = board.GetCoordinate(northWestNeighbor);
         while (northWestNeighbor != null)
         {
             // Occupied by friendly - stop
-            if (northWestNeighbor.IsOccupied() && northWestNeighbor.GetOccupiedColor() == this.GetColor()){
+            if (board.IsOccupiedByFriendly(northWestNeighbor, this.GetColor())){
                 break;
             }
             // Occupied by enemy - add to valid moves and stop
-            if (northWestNeighbor.IsOccupied() && northWestNeighbor.GetOccupiedColor() != this.GetColor())
+            if (board.IsOccupiedByEnemy(northWestNeighbor, this.GetColor()))
             {
                 validCoordinates.Add(northWestNeighbor);
                 break;
             }
             // Unoccupied - add to valid moves and continue
-            if (!northWestNeighbor.IsOccupied())
+            if (!board.IsOccupied(northWestNeighbor))
             {
                 validCoordinates.Add(northWestNeighbor);
-                northEastRow = northWestNeighbor.GetNeighborCoordinate(Direction.North).getRow();
-                northEastColumn = northWestNeighbor.GetNeighborCoordinate(Direction.West).getColumn();
+                northEastRow = northWestNeighbor.GetNeighborCoordinate(Direction.North).GetRow();
+                northEastColumn = northWestNeighbor.GetNeighborCoordinate(Direction.West).GetColumn();
                 northWestNeighbor = new Coordinate(northEastColumn, northEastRow);
-                northWestNeighbor = Board.Instance.GetCoordinate(northWestNeighbor);
+                northWestNeighbor = board.GetCoordinate(northWestNeighbor);
             }
         }
 
         // SouthEast
-        Row southEastRow = currentCoordinate.GetNeighborCoordinate(Direction.South).getRow();
-        Column southEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).getColumn();
+        Row southEastRow = currentCoordinate.GetNeighborCoordinate(Direction.South).GetRow();
+        Column southEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).GetColumn();
         Coordinate southEastNeighbor = new Coordinate(southEastColumn, southEastRow);
-        southEastNeighbor = Board.Instance.GetCoordinate(southEastNeighbor);
+        southEastNeighbor = board.GetCoordinate(southEastNeighbor);
         while (southEastNeighbor != null)
         {
             // Occupied by friendly - stop
-            if (southEastNeighbor.IsOccupied() && southEastNeighbor.GetOccupiedColor() == this.GetColor()){
+            if (board.IsOccupiedByFriendly(southEastNeighbor, this.GetColor())){
                 break;
             }
             // Occupied by enemy - add to valid moves and stop
-            if (southEastNeighbor.IsOccupied() && southEastNeighbor.GetOccupiedColor() != this.GetColor())
+            if (board.IsOccupiedByEnemy(southEastNeighbor, this.GetColor()))
             {
                 validCoordinates.Add(southEastNeighbor);
                 break;
             }
             // Unoccupied - add to valid moves and continue
-            if (!southEastNeighbor.IsOccupied())
+            if (!board.IsOccupied(southEastNeighbor))
             {
                 validCoordinates.Add(southEastNeighbor);
-                southEastRow = southEastNeighbor.GetNeighborCoordinate(Direction.South).getRow();
-                southEastColumn = southEastNeighbor.GetNeighborCoordinate(Direction.East).getColumn();
+                southEastRow = southEastNeighbor.GetNeighborCoordinate(Direction.South).GetRow();
+                southEastColumn = southEastNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
                 southEastNeighbor = new Coordinate(southEastColumn, southEastRow);
-                southEastNeighbor = Board.Instance.GetCoordinate(southEastNeighbor);
+                southEastNeighbor = board.GetCoordinate(southEastNeighbor);
             }
         }
 
         // SouthWest
-        Row southWestRow = currentCoordinate.GetNeighborCoordinate(Direction.South).getRow();
-        Column southWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).getColumn();
+        Row southWestRow = currentCoordinate.GetNeighborCoordinate(Direction.South).GetRow();
+        Column southWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).GetColumn();
         Coordinate southWestNeighbor = new Coordinate(southWestColumn, southWestRow);
-        southWestNeighbor = Board.Instance.GetCoordinate(southWestNeighbor);
+        southWestNeighbor = board.GetCoordinate(southWestNeighbor);
         while (southWestNeighbor != null)
         {
             // Occupied - add to valid reach and stop
-            if (southWestNeighbor.IsOccupied())
+            if (board.IsOccupied(southWestNeighbor))
             {
                 validCoordinates.Add(southWestNeighbor);
                 break;
             }
             // Unoccupied - add to valid moves and continue
-            if (!southWestNeighbor.IsOccupied())
+            else
             {
                 validCoordinates.Add(southWestNeighbor);
-                southWestRow = southWestNeighbor.GetNeighborCoordinate(Direction.South).getRow();
-                southWestColumn = southWestNeighbor.GetNeighborCoordinate(Direction.West).getColumn();
+                southWestRow = southWestNeighbor.GetNeighborCoordinate(Direction.South).GetRow();
+                southWestColumn = southWestNeighbor.GetNeighborCoordinate(Direction.West).GetColumn();
                 southWestNeighbor = new Coordinate(southWestColumn, southWestRow);
-                southWestNeighbor = Board.Instance.GetCoordinate(southWestNeighbor);
+                southWestNeighbor = board.GetCoordinate(southWestNeighbor);
             }
         }
 
@@ -134,6 +136,7 @@ public class Bishop : Piece
 
     public override bool CanMove(Coordinate coord)
     {
+        Board board = Board.Instance;
         bool canMove = true;
 
         // Cannot move if:
@@ -141,7 +144,7 @@ public class Bishop : Piece
         // Occupied by friendly
 
         if (!CanReach(coord)) canMove = false;
-        if (coord.GetOccupiedColor() != this.GetColor()) canMove = false;
+        if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
         
         return canMove;
     }

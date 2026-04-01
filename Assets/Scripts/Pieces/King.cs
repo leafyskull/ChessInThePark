@@ -11,11 +11,7 @@ public class King : Piece
 
     public override bool CanReach(Coordinate coord)
     {
-        Board board = Board.Instance;
-
-        bool canMove = false;
-
-        Coordinate currentCoordinate = this.getCoordinate();
+        Coordinate currentCoordinate = this.GetCoordinate();
         List<Coordinate> validCoordinates = new List<Coordinate>();
         List<Coordinate> potentialCoordinates = new List<Coordinate>();
 
@@ -37,26 +33,21 @@ public class King : Piece
         potentialCoordinates.Add(west);
         potentialCoordinates.Add(northWest);
 
-        foreach (Coordinate coordinate in potentialCoordinates)
-        {
-            // If coordinate is empty and not watched by enemy - valid move
-            if (!coordinate.IsOccupied())
-                validCoordinates.Add(coordinate);
-            // If coordinate is occupied by enemy and not watched - valid move
-
-            // If coordinate is watched by enemy, or occupied by friendly - not valid move
-        }
-
-
-
-
-        return canMove;
+        if (potentialCoordinates.Contains(coord)) return true;
+        else return false;
     }
 
     public override bool CanMove(Coordinate coord)
     {
-        // TODO: Implement
-        return false;
+        Board board = Board.Instance;
+
+        bool canMove = true;
+
+        if (!CanReach(coord)) canMove = false;
+        if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
+        if (board.IsReachableByEnemy(coord, this.GetColor())) canMove = false;
+
+        return canMove;
     }
 
 }
