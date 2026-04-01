@@ -28,12 +28,8 @@ public class Bishop : Piece
         northEastNeighbor = board.GetCoordinate(northEastNeighbor);
         while (northEastNeighbor != null)
         {
-            // Occupied by friendly - stop
-            if (board.IsOccupiedByFriendly(northEastNeighbor, this.GetColor())){
-                break;
-            }
-            // Occupied by enemy - add to valid moves and stop
-            if (board.IsOccupiedByEnemy(northEastNeighbor, this.GetColor()))
+            // Occupied - add to valid reach and stop.
+            if (board.IsOccupied(northEastNeighbor))
             {
                 validCoordinates.Add(northEastNeighbor);
                 break;
@@ -56,12 +52,8 @@ public class Bishop : Piece
         northWestNeighbor = board.GetCoordinate(northWestNeighbor);
         while (northWestNeighbor != null)
         {
-            // Occupied by friendly - stop
-            if (board.IsOccupiedByFriendly(northWestNeighbor, this.GetColor())){
-                break;
-            }
-            // Occupied by enemy - add to valid moves and stop
-            if (board.IsOccupiedByEnemy(northWestNeighbor, this.GetColor()))
+            // Occupied - add to valid reach and stop.
+            if (board.IsOccupied(northWestNeighbor))
             {
                 validCoordinates.Add(northWestNeighbor);
                 break;
@@ -84,12 +76,8 @@ public class Bishop : Piece
         southEastNeighbor = board.GetCoordinate(southEastNeighbor);
         while (southEastNeighbor != null)
         {
-            // Occupied by friendly - stop
-            if (board.IsOccupiedByFriendly(southEastNeighbor, this.GetColor())){
-                break;
-            }
-            // Occupied by enemy - add to valid moves and stop
-            if (board.IsOccupiedByEnemy(southEastNeighbor, this.GetColor()))
+            // Occupied - add to valid reach and stop.
+            if (board.IsOccupied(southEastNeighbor))
             {
                 validCoordinates.Add(southEastNeighbor);
                 break;
@@ -138,10 +126,6 @@ public class Bishop : Piece
     {
         Board board = Board.Instance;
         bool canMove = true;
-
-        // Cannot move if:
-        // Cannot reach
-        // Occupied by friendly
 
         if (!CanReach(coord)) canMove = false;
         if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;

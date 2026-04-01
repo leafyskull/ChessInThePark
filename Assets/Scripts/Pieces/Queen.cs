@@ -8,12 +8,12 @@ public class Queen : Piece
 
 
 
-    public override bool CanMove(Coordinate coord)
+    public override bool CanReach(Coordinate coord)
     {
         Rook hypotheticalRook = new Rook();
-        hypotheticalRook.SetCoordinate(this.getCoordinate());
+        hypotheticalRook.SetCoordinate(this.GetCoordinate());
         Bishop hypotheticalBishop = new Bishop();
-        hypotheticalBishop.SetCoordinate(this.getCoordinate());
+        hypotheticalBishop.SetCoordinate(this.GetCoordinate());
 
         if (hypotheticalBishop.CanMove(coord) || hypotheticalRook.CanMove(coord))
             return true;
@@ -21,10 +21,16 @@ public class Queen : Piece
             return false;
     }
 
-    public override bool CanReach(Coordinate coord)
+    public override bool CanMove(Coordinate coord)
     {
-        // TODO: Implement
-        return false;
+        Board board = Board.Instance;
+
+        bool canMove = true;
+
+        if (!CanReach(coord)) canMove = false;
+        if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
+
+        return canMove;
     }
 
 }
