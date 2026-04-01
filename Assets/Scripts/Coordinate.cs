@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -24,11 +25,10 @@ public enum Direction
 }
 
 
-public class Coordinate : MonoBehaviour
+public class Coordinate
 {
     private Row row;
     private Column column;
-    private Piece piece;
     private const int NUM_ROWS = 8;
     private const int NUM_COLS = 8;
     
@@ -47,29 +47,20 @@ public class Coordinate : MonoBehaviour
 
     public Coordinate(Coordinate coord)
     {
-        this.column = coord.getColumn();
-        this.row = coord.getRow();
+        this.column = coord.GetColumn();
+        this.row = coord.GetRow();
     }
 
-    public bool IsOccupied() {return (this.piece != null);}
-    public Color GetOccupiedColor() {return this.piece.GetColor();}
-
-    public Piece getPieceAt()
-    {
-        return this.piece;
-    }
-
-    public Row getRow() {return this.row;}
-    public Column getColumn() {return this.column;}
-    public int RowToInt(Row row) {return (int)row - 1;}
-    public Row IntToRow(int integer) {return (Row)(integer + 1);}
-    public int ColumnToInt(Column column) {return (int)column - 1;}
-    public Column IntToColumn(int integer) {return (Column)(integer + 1);}
+    public Row GetRow() {return this.row;}
+    public Column GetColumn() {return this.column;}
 
     public Coordinate GetNeighborCoordinate(Direction dir)
     {
-        int row = this.RowToInt(this.row);
-        int column = this.ColumnToInt(this.column);
+        Board board = Board.Instance;
+    
+
+        int row = (int)(this.row);
+        int column = (int)(this.column);
 
         Coordinate returnCoordinate = null;
         switch (dir)
@@ -104,20 +95,21 @@ public class Coordinate : MonoBehaviour
                 break;
         }
 
-        if (row > NUM_ROWS || row < 1 ||
-            column > NUM_COLS || column < 1)
+        if (row > NUM_ROWS - 1 || row < 0 ||
+            column > NUM_COLS - 1 || column < 0)
         {
             returnCoordinate = null;
         }
         else
         {
-            Column returnColumn = IntToColumn(column);
-            Row returnRow = IntToRow(row);
-            returnCoordinate = new Coordinate(returnColumn, returnRow);
+            Column returnColumn = (Column)column;
+            Row returnRow = (Row)row;
+            returnCoordinate = board.GetCoordinate(returnColumn, returnRow);
         }
 
         return returnCoordinate;
     }
+
 
 
 

@@ -15,16 +15,15 @@ public abstract class Piece : MonoBehaviour
     private Color color;
     private bool hasMoved = false;
     private Coordinate coordinate;
-    
-    public Piece(){
-        this.coordinate = new Coordinate();
-    }
 
-    public Coordinate getCoordinate() {return this.coordinate;}
+    public Coordinate GetCoordinate() {return this.coordinate;}
     public void SetCoordinate(Coordinate coord) {this.coordinate = coord;}
 
     public Color GetColor() {return this.color;}
     public void SetColor(Color newcolor) {this.color = newcolor;}
+
+    public void SetMoved() {this.hasMoved = true;}
+    public bool GetHasMoved() {return this.hasMoved;}
 
     public void MoveTo(Coordinate coordinate)
     {
@@ -38,6 +37,7 @@ public abstract class Piece : MonoBehaviour
     }
 
     public abstract bool CanMove(Coordinate coord);
+    public abstract bool CanReach(Coordinate coord);
     
     // TODO: Movement
     // TODO: Special piece logic

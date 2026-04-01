@@ -8,7 +8,7 @@ public class Bishop : Piece
     
 
 
-    public override bool CanMove(Coordinate coord)
+    public override bool CanReach(Coordinate coord)
     {
         Coordinate currentCoordinate = this.getCoordinate();
         List<Coordinate> validCoordinates = new List<Coordinate>();
@@ -110,12 +110,8 @@ public class Bishop : Piece
         southWestNeighbor = Board.Instance.GetCoordinate(southWestNeighbor);
         while (southWestNeighbor != null)
         {
-            // Occupied by friendly - stop
-            if (southWestNeighbor.IsOccupied() && southWestNeighbor.GetOccupiedColor() == this.GetColor()){
-                break;
-            }
-            // Occupied by enemy - add to valid moves and stop
-            if (southWestNeighbor.IsOccupied() && southWestNeighbor.GetOccupiedColor() != this.GetColor())
+            // Occupied - add to valid reach and stop
+            if (southWestNeighbor.IsOccupied())
             {
                 validCoordinates.Add(southWestNeighbor);
                 break;
@@ -133,6 +129,20 @@ public class Bishop : Piece
 
         if (validCoordinates.Contains(coord)) canMove = true;
 
+        return canMove;
+    }
+
+    public override bool CanMove(Coordinate coord)
+    {
+        bool canMove = true;
+
+        // Cannot move if:
+        // Cannot reach
+        // Occupied by friendly
+
+        if (!CanReach(coord)) canMove = false;
+        if (coord.GetOccupiedColor() != this.GetColor()) canMove = false;
+        
         return canMove;
     }
 

@@ -129,4 +129,10 @@ public class Rook : Piece
 
         return canMove;
     }
+
+    public override bool CanReach(Coordinate coord)
+    {
+        // TODO: Implement
+        return false;
+    }
 }
