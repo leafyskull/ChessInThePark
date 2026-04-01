@@ -3,23 +3,34 @@ using System.Globalization;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 
 public class Board : MonoBehaviour
 {
     public static Board Instance;
-    private Coordinate[,] coordinates = new Coordinate[8,8];
-    private Piece[,] pieceGrid = new Piece[8,8];
+
     private const int numRows = 8;
     private const int numColumns = 8;
-    [SerializeField] private float tileSize = 1.0f;
-    [SerializeField] private Vector3 boardOrigin = Vector3.zero;
+
+    private Coordinate[,] coordinates = new Coordinate[numColumns, numRows];
+    private Piece[,] pieceGrid = new Piece[numColumns, numRows];
     [SerializeField] private Transform piecesParent;
 
 
 
+    [Header("Board / Tile stuff")]
+    [SerializeField] private BoardTile tilePrefab;
+    [SerializeField] private Transform tilesParent;
+    [SerializeField] private float tileSize = 1.0f;
+    [SerializeField] private Vector3 boardOrigin = Vector3.zero;
+    private BoardTile[,] tiles = new BoardTile[numColumns, numRows];
+
+
 
     private List<Piece> pieces;
+
+    [Header("Piece Prefabs")]
     [SerializeField] private Piece whitePawnPrefab;
     [SerializeField] private Piece blackPawnPrefab;
     [SerializeField] private Piece whiteKnightPrefab;
@@ -32,6 +43,7 @@ public class Board : MonoBehaviour
     [SerializeField] private Piece blackQueenPrefab;
     [SerializeField] private Piece whiteKingPrefab;
     [SerializeField] private Piece blackKingPrefab;
+
 
 
     void Awake()
@@ -61,38 +73,84 @@ public class Board : MonoBehaviour
             }
         }
 
-        // TODO: Generate pieces
+        Debug.Log("Generating pieces...");
         pieces = new List<Piece>();
+        GeneratePieces(pieces);
+        Debug.Log("Pieces genered!");
+
+        Debug.Log("Generating board visuals...");
+        GenerateBoardVisuals();
+        Debug.Log("Board visuals generated!");
+
+        // Center Camera on board
+        Vector3 boardCenter = boardOrigin + new Vector3((numColumns * tileSize) / 2, (numRows * tileSize) / 2, 0);
+        Camera.main.transform.position = new Vector3(boardCenter.x, boardCenter.y, Camera.main.transform.position.z);
+    }
+
+    private void GenerateBoardVisuals()
+    {
+        for (int col = 0; col < numColumns; col++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Coordinate coord = new Coordinate((Column)col, (Row)row);
+                Vector3 worldPosition = GetWorldPosition(coord);
+
+                BoardTile newTile = Instantiate(tilePrefab, worldPosition, Quaternion.identity, tilesParent);
+                newTile.Initialize(coord);
+
+                tiles[col, row] = newTile;
+
+                bool isLightTile = (col + row) % 2 == 0;
+                SpriteRenderer sr = newTile.GetComponent<SpriteRenderer>();
+                sr.color = isLightTile ? UnityEngine.Color.white : UnityEngine.Color.gray;
+            }
+        }
     }
 
     private void GeneratePieces(List<Piece> pieces)
     {
-        Coordinate coord = new Coordinate(Column.A, Row.One);
-
         // Pawns
-        
+        for (int i = 0; i < 8; i++)
+        {
+            SpawnPiece(whitePawnPrefab, (Column)i, Row.Two, Color.White);
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            SpawnPiece(blackPawnPrefab, (Column)i, Row.Seven, Color.Black);
+        }
 
+        // Rooks
+        SpawnPiece(whiteRookPrefab, Column.A, Row.One, Color.White);
+        SpawnPiece(whiteRookPrefab, Column.H, Row.One, Color.White);
+        SpawnPiece(blackRookPrefab, Column.A, Row.Eight, Color.Black);
+        SpawnPiece(blackRookPrefab, Column.H, Row.Eight, Color.Black);
 
         // Knights
-
+        SpawnPiece(whiteKnightPrefab, Column.B, Row.One, Color.White);
+        SpawnPiece(whiteKnightPrefab, Column.G, Row.One, Color.White);
+        SpawnPiece(blackKnightPrefab, Column.B, Row.Eight, Color.Black);
+        SpawnPiece(blackKnightPrefab, Column.G, Row.Eight, Color.Black);
 
         // Bishops
-
+        SpawnPiece(whiteBishopPrefab, Column.C, Row.One, Color.White);
+        SpawnPiece(whiteBishopPrefab, Column.F, Row.One, Color.White);
+        SpawnPiece(blackBishopPrefab, Column.C, Row.Eight, Color.Black);
+        SpawnPiece(blackBishopPrefab, Column.F, Row.Eight, Color.Black);
 
         // Queens
-
+        SpawnPiece(whiteQueenPrefab, Column.D, Row.One, Color.White);
+        SpawnPiece(blackQueenPrefab, Column.D, Row.Eight, Color.White);
         
         // Kings
-
-
-
+        SpawnPiece(whiteKingPrefab, Column.E, Row.One, Color.White);
+        SpawnPiece(blackKingPrefab, Column.E, Row.Eight, Color.Black);
     }
 
-    private Piece SpawnPiece(Piece piecePrefab, Column column, Row row, Color color)
+    private void SpawnPiece(Piece piecePrefab, Column column, Row row, Color color)
     {
         Coordinate coord = this.GetCoordinate(column, row);
 
-        // TODO: Set coordinates and transform in world.
         Piece newPiece = Instantiate(piecePrefab, piecesParent);
         newPiece.Initialize(color, coord);
 
@@ -101,7 +159,7 @@ public class Board : MonoBehaviour
         Vector3 worldPosition = this.GetWorldPosition(coord);
         newPiece.transform.position = worldPosition;
 
-        return newPiece;
+        pieces.Add(newPiece);
     }
 
     private Vector3 GetWorldPosition(Coordinate coord)
