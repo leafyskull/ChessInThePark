@@ -10,9 +10,28 @@ public class Board : MonoBehaviour
     public static Board Instance;
     private Coordinate[,] coordinates = new Coordinate[8,8];
     private Piece[,] pieceGrid = new Piece[8,8];
-    private int numRows = 8;
-    private int numColumns = 8;
+    private const int numRows = 8;
+    private const int numColumns = 8;
+    [SerializeField] private float tileSize = 1.0f;
+    [SerializeField] private Vector3 boardOrigin = Vector3.zero;
+
+
+
+
     private List<Piece> pieces;
+    [SerializeField] private GameObject whitePawnPrefab;
+    [SerializeField] private GameObject blackPawnPrefab;
+    [SerializeField] private GameObject whiteKnightPrefab;
+    [SerializeField] private GameObject blackKnightPrefab;
+    [SerializeField] private GameObject whiteRookPrefab;
+    [SerializeField] private GameObject blackRookPrefab;
+    [SerializeField] private GameObject whiteBishopPrefab;
+    [SerializeField] private GameObject blackBishopPrefab;
+    [SerializeField] private GameObject whiteQueenPrefab;
+    [SerializeField] private GameObject blackQueenPrefab;
+    [SerializeField] private GameObject whiteKingPrefab;
+    [SerializeField] private GameObject blackKingPrefab;
+
 
     void Awake()
     {
@@ -50,31 +69,7 @@ public class Board : MonoBehaviour
         Coordinate coord = new Coordinate(Column.A, Row.One);
 
         // Pawns
-        for (int i = 0; i < 8; i++)
-        {
-            Pawn pawn = new Pawn();
-            pawn.SetColor(Color.White);
-            coord = new Coordinate((Column)i, (Row)1);
-            MovePiece(pawn, coord);
-        }
-        for (int i = 0; i < 8; i++)
-        {
-            Pawn pawn = new Pawn();
-            pawn.SetColor(Color.Black);
-            coord = new Coordinate((Column)i, (Row)6);
-            MovePiece(pawn, coord);
-        }
-
-        // Rooks
-        Rook rook = new Rook();
-        rook.SetColor(Color.White);
-        coord = new Coordinate(Column.A, Row.One);
-        MovePiece(rook, coord);
-
-        rook = new Rook();
-        rook.SetColor(Color.White);
-        coord = new Coordinate(Column.H, Row.One);
-        MovePiece(rook, coord);
+        
 
 
         // Knights
@@ -90,6 +85,34 @@ public class Board : MonoBehaviour
 
 
 
+    }
+
+    private Piece SpawnPiece(GameObject piecePrefab, Column column, Row row, Color color)
+    {
+        Coordinate coord = this.GetCoordinate(column, row);
+
+        // TODO: Set coordinates and transform in world.
+        Piece newPiece = Instantiate(piecePrefab, pieceParent);
+        newPiece.Initialize(color, coord);
+
+        this.MovePiece(newPiece, coord);
+
+        Vector3 worldPosition = this.GetWorldPosition(coord);
+        newPiece.transform.position = worldPosition;
+
+        return newPiece;
+    }
+
+    private Vector3 GetWorldPosition(Coordinate coord)
+    {
+        int x = (int)coord.GetColumn();
+        int y = (int)coord.GetRow();
+
+        return new Vector3(
+            boardOrigin.x + (x + 0.5f) * tileSize,
+            boardOrigin.y + (y + 0.5f) * tileSize,
+            0f
+        );
     }
 
     public Coordinate GetCoordinate(Column column, Row row)

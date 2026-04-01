@@ -16,6 +16,14 @@ public abstract class Piece : MonoBehaviour
     private bool hasMoved = false;
     private Coordinate coordinate;
 
+
+
+    public void Initialize(Color color, Coordinate coord)
+    {
+        this.color = color;
+        this.coordinate = coord;
+    }
+
     public Coordinate GetCoordinate() {return this.coordinate;}
     public void SetCoordinate(Coordinate coord) {this.coordinate = coord;}
 
