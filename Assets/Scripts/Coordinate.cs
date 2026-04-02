@@ -107,7 +107,22 @@ public class Coordinate
             returnCoordinate = board.GetCoordinate(returnColumn, returnRow);
         }
 
+        if (returnCoordinate == null) Debug.Log("Return coord is null!");
+        else Debug.Log($"Return coordinate: {returnCoordinate.GetColumn()}{returnCoordinate.GetRow()}");
+
         return returnCoordinate;
+    }
+
+    public bool isEqual(Coordinate coordinate)
+    {
+        int thisCol = (int)this.column;
+        int thisRow = (int)this.row;
+
+        int otherCol = (int)coordinate.GetColumn();
+        int otherRow = (int)coordinate.GetRow();
+
+        if (thisCol == otherCol && thisRow == otherRow) return true;
+        else return false;
     }
 
 

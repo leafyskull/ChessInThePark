@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 
 public enum Color
@@ -17,7 +18,7 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     private Color color;
     private bool hasMoved = false;
     private Coordinate coordinate;
-    private LayerMask TileLayerMask;
+    [SerializeField] private LayerMask TileLayerMask;
 
     public bool dragging {get; private set;}
     Coordinate previousCoordinate = null;
@@ -30,7 +31,6 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         this.color = color;
         this.coordinate = coord;
-        TileLayerMask = LayerMask.GetMask("Tile");
     }
 
     public Coordinate GetCoordinate() {return this.coordinate;}
@@ -46,6 +46,12 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         hasMoved = true;
         this.coordinate = coordinate;
+    }
+
+    public void MoveToTile(BoardTile tile)
+    {
+        this.coordinate = tile.GetCoordinate();
+        this.transform.position = tile.transform.position;
     }
 
     public bool PieceHasMoved()
@@ -87,12 +93,13 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("Pointer down - now trying to place...");
+        Debug.Log("Pointer up - now trying to place...");
 
         dragging = false;
 
         // Try to find a coordinate under the cursor
         Coordinate destination = FindCoordinateUnderCursor(eventData);
+        BoardTile destinationTile = FindTileUnderCursor(eventData);
 
         // If found, assign CrewMember to station
         if (!this.CanMove(destination))
@@ -104,7 +111,9 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             return;
         }
 
-        MoveTo(destination);
+        // MoveTo(destination);
+        //MoveToTile(destinationTile);
+        Board.Instance.MovePieceToTile(this, destinationTile);
     }
 
     // ScreenToWorld(): Converts a screen position to it's position in the world.
@@ -123,12 +132,32 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     private Coordinate FindCoordinateUnderCursor(PointerEventData eventData)
     {
         RaycastHit2D raycast = Physics2D.Raycast(ScreenToWorld(eventData.position), Vector3.forward, 100f, TileLayerMask);
+        Debug.Log($"EventData position: {ScreenToWorld(eventData.position)}");
+
+        if (raycast.collider == null)
+            Debug.Log("Raycast Collider is null!");
 
         if (raycast.collider != null)
         {
             Coordinate coordinate = raycast.collider.GetComponentInParent<BoardTile>().GetCoordinate();
-            Debug.Log($"Found coordinate: {coordinate.GetColumn()}{coordinate.GetRow()}");
+            if (coordinate != null) Debug.Log($"Found coordinate: {coordinate.GetColumn()}{coordinate.GetRow()}");
             return coordinate;
+        }
+
+        return null;
+    }
+
+    private BoardTile FindTileUnderCursor(PointerEventData eventData)
+    {
+        RaycastHit2D raycast = Physics2D.Raycast(ScreenToWorld(eventData.position), Vector3.forward, 100f, TileLayerMask);
+
+        if (raycast.collider == null)
+            Debug.Log("Raycast Collider is null!");
+
+        if (raycast.collider != null)
+        {
+            BoardTile tile = raycast.collider.GetComponentInParent<BoardTile>();
+            return tile;
         }
 
         return null;

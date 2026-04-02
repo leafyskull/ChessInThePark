@@ -195,6 +195,9 @@ public class Board : MonoBehaviour
         int col = (int)coordinate.GetColumn();
         int row = (int)coordinate.GetRow();
 
+        if (pieceGrid[col, row] != null) Debug.Log($"Return piece: {pieceGrid[col, row]}");
+        if (pieceGrid[col, row] == null) Debug.Log($"Return piece is null!");
+
         return pieceGrid[col, row];
     }
 
@@ -254,10 +257,34 @@ public class Board : MonoBehaviour
         piece.SetMoved();
     }
 
+    public void MovePieceToTile(Piece piece, BoardTile tile)
+    {
+        Coordinate start = piece.GetCoordinate();
+        Coordinate target = tile.GetCoordinate();
+
+        // Remove from old position
+        pieceGrid[(int)start.GetColumn(), (int)start.GetRow()] = null;
+
+        // Capture if needed
+        Piece captured = GetPieceAt(target);
+        if (captured != null)
+        {
+            RemovePiece(captured);
+        }
+
+        // Place in new position
+        pieceGrid[(int)target.GetColumn(), (int)target.GetRow()] = piece;
+
+        // Update piece's internal coordinate
+        // piece.SetCoordinate(target);
+        piece.MoveToTile(tile);
+        piece.SetMoved();
+    }
+
     public void RemovePiece(Piece piece)
     {
         // For now: Just destroy the piece
-        Destroy(piece);
+        Destroy(piece.gameObject);
     }
     
 

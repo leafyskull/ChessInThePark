@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 
 
@@ -45,8 +46,13 @@ public class Pawn : Piece
         if (frontRight != null && board.IsOccupiedByEnemy(frontRight, this.GetColor())) validCoordinates.Add(frontRight);
         if (frontLeft != null && board.IsOccupied(frontLeft) && board.IsOccupiedByEnemy(frontLeft, this.GetColor())) validCoordinates.Add(frontLeft);
 
-        if (validCoordinates.Contains(coord)) canMove = true;
+        // if (validCoordinates.Contains(coord)) canMove = true;
+        // if (validCoordinates.Contains(coord)) Debug.Log("Coordinate is valid!");
 
+        foreach (Coordinate coordinate in validCoordinates){
+            if (coord.isEqual(coordinate)) canMove = true;
+        }
+            
         return canMove;
     }
 
