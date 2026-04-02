@@ -9,7 +9,7 @@ public class Pawn : Piece
 {
 
     // TODO: Enpassant
-    public override bool CanMove(Coordinate coord)
+    public override bool CanReach(Coordinate coord)
     {
         if (coord == null) return false;
 
@@ -20,34 +20,23 @@ public class Pawn : Piece
         bool canMove = false;
 
         Coordinate front = null;
-        Coordinate frontRight = null;
-        Coordinate frontLeft = null;
         Coordinate doubleFront = null;
         
         switch (this.GetColor()){
             case Color.White:
                 front = currentCoordinate.GetNeighborCoordinate(Direction.North);
-                if (front!= null) doubleFront = front.GetNeighborCoordinate(Direction.North);
-                frontRight = currentCoordinate.GetNeighborCoordinate(Direction.NorthEast);
-                frontLeft = currentCoordinate.GetNeighborCoordinate(Direction.NorthWest);
+                if (front!= null && !board.IsOccupied(front)) doubleFront = front.GetNeighborCoordinate(Direction.North);
 
                 break;
             case Color.Black:
                 front = currentCoordinate.GetNeighborCoordinate(Direction.South);
-                if (front!= null) doubleFront = front.GetNeighborCoordinate(Direction.South);
-                frontRight = currentCoordinate.GetNeighborCoordinate(Direction.SouthWest);
-                frontLeft = currentCoordinate.GetNeighborCoordinate(Direction.SouthEast);
+                if (front!= null && !board.IsOccupied(front)) doubleFront = front.GetNeighborCoordinate(Direction.South);
 
                 break;
         }
 
         if (front != null && !board.IsOccupied(front)) validCoordinates.Add(front);
         if (doubleFront != null && !PieceHasMoved() && !board.IsOccupied(doubleFront)) validCoordinates.Add(doubleFront);
-        if (frontRight != null && board.IsOccupiedByEnemy(frontRight, this.GetColor())) validCoordinates.Add(frontRight);
-        if (frontLeft != null && board.IsOccupied(frontLeft) && board.IsOccupiedByEnemy(frontLeft, this.GetColor())) validCoordinates.Add(frontLeft);
-
-        // if (validCoordinates.Contains(coord)) canMove = true;
-        // if (validCoordinates.Contains(coord)) Debug.Log("Coordinate is valid!");
 
         foreach (Coordinate coordinate in validCoordinates){
             if (coord.isEqual(coordinate)) canMove = true;
@@ -56,10 +45,50 @@ public class Pawn : Piece
         return canMove;
     }
 
-    public override bool CanReach(Coordinate coord)
+    public override bool IsInCaptureRange(Coordinate coord)
     {
-        // TODO: Implement
-        return false;
+        if (coord == null) return false;
+
+        Coordinate currentCoordinate = this.GetCoordinate();
+        List<Coordinate> validCoordinates = new List<Coordinate>();
+        bool isInCaptureRange = false;
+
+        Coordinate frontLeft = null;
+        Coordinate frontRight = null;
+
+        switch (this.GetColor())
+        {
+            case Color.White:
+                frontLeft = currentCoordinate.GetNeighborCoordinate(Direction.NorthWest);
+                frontRight = currentCoordinate.GetNeighborCoordinate(Direction.NorthEast);
+                break;
+            case Color.Black:
+                frontLeft = currentCoordinate.GetNeighborCoordinate(Direction.SouthEast);
+                frontRight = currentCoordinate.GetNeighborCoordinate(Direction.SouthWest);
+                break;
+        }
+
+        if (frontLeft != null) validCoordinates.Add(frontLeft);
+        if (frontRight != null) validCoordinates.Add(frontRight);
+
+        foreach (Coordinate coordinate in validCoordinates)
+        {
+            if (coordinate.isEqual(coord)) isInCaptureRange = true;
+        }
+
+        return isInCaptureRange;
+    }
+
+    public override bool CanMove(Coordinate coord)
+    {
+        Board board = Board.Instance;
+
+        bool canMove = false;
+
+        if (CanReach(coord) && !board.IsOccupied(coord)) canMove = true;
+        if (IsInCaptureRange(coord) && board.IsOccupiedByEnemy(coord, this.GetColor())) canMove = true;
+
+        return canMove;
     }
 
     public override void OnPointerDown(PointerEventData eventData)

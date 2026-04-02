@@ -61,6 +61,7 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     public abstract bool CanMove(Coordinate coord);
     public abstract bool CanReach(Coordinate coord);
+    public abstract bool IsInCaptureRange(Coordinate coord);
     
     // TODO: Movement
     // TODO: Special piece logic

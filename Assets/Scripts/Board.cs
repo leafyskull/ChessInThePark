@@ -140,7 +140,7 @@ public class Board : MonoBehaviour
 
         // Queens
         SpawnPiece(whiteQueenPrefab, Column.D, Row.One, Color.White);
-        SpawnPiece(blackQueenPrefab, Column.D, Row.Eight, Color.White);
+        SpawnPiece(blackQueenPrefab, Column.D, Row.Eight, Color.Black);
         
         // Kings
         SpawnPiece(whiteKingPrefab, Column.E, Row.One, Color.White);

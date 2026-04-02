@@ -10,7 +10,7 @@ public class Knight : Piece
     
 
 
-    public override bool CanReach(Coordinate coord)
+    public override bool IsInCaptureRange(Coordinate coord)
     {
         if (coord == null) return false;
 
@@ -21,53 +21,78 @@ public class Knight : Piece
         bool canMove = false;
 
         Coordinate currentCoordinate = this.GetCoordinate();
-        Row currentRow = currentCoordinate.GetRow();
-        Column currentColumn = currentCoordinate.GetColumn();
+        int currentRow = (int)currentCoordinate.GetRow();
+        int currentColumn = (int)currentCoordinate.GetColumn();
 
-        Row row;
-        Column column;
+        int row;
+        int column;
 
-        row = (Row)(currentRow + 1);
-        column = (Column)(currentColumn - 2);
-        Coordinate OneNorthTwoWest = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(OneNorthTwoWest);
+        row = currentRow + 1;
+        column = currentColumn - 2;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate OneNorthTwoWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(OneNorthTwoWest);
+        }
 
-        row = (Row)(currentRow + 2);
-        column = (Column)(currentColumn - 1);
-        Coordinate TwoNorthOneWest = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(TwoNorthOneWest);
+        row = currentRow + 2;
+        column = currentColumn - 1;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate TwoNorthOneWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(TwoNorthOneWest);
+        }
 
-        row = (Row)(currentRow + 2);
-        column = (Column)(currentColumn + 1);
-        Coordinate TwoNorthOneEast = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(TwoNorthOneEast);
+        row = currentRow + 2;
+        column = currentColumn + 1;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate TwoNorthOneEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(TwoNorthOneEast);
+        }
 
-        row = (Row)(currentRow + 1);
-        column = (Column)(currentColumn + 2);
-        Coordinate OneNorthTwoEast = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(OneNorthTwoEast);
+        row = currentRow + 1;
+        column = currentColumn + 2;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate OneNorthTwoEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(OneNorthTwoEast);
+        }
 
-        row = (Row)(currentRow - 1);
-        column = (Column)(currentColumn + 2);
-        Coordinate OneSouthTwoEast = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(OneSouthTwoEast);
+        row = currentRow - 1;
+        column = currentColumn + 2;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate OneSouthTwoEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(OneSouthTwoEast);   
+        }
 
-        row = (Row)(currentRow - 2);
-        column = (Column)(currentColumn + 1);
-        Coordinate TwoSouthOneEast = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(TwoSouthOneEast);
+        row = currentRow - 2;
+        column = currentColumn + 1;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate TwoSouthOneEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(TwoSouthOneEast);
+        }
 
-        row = (Row)(currentRow - 2);
-        column = (Column)(currentColumn - 1);
-        Coordinate TwoSouthOneWest = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(TwoSouthOneWest);
+        row = currentRow - 2;
+        column = currentColumn - 1;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate TwoSouthOneWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(TwoSouthOneWest);
+        }
 
-        row = (Row)(currentRow - 1);
-        column = (Column)(currentColumn - 2);
-        Coordinate OneSouthTwoWest = board.GetCoordinate(new Coordinate(column, row));
-        potentialCoordinates.Add(OneSouthTwoWest);
+        row = currentRow - 1;
+        column = currentColumn - 2;
+        if (row > 0 && row < 8 && column > 0 && column < 8)
+        {
+            Coordinate OneSouthTwoWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
+            potentialCoordinates.Add(OneSouthTwoWest);
+        }
 
-        if (validCoordinates.Contains(coord)) canMove = true;
+        foreach (Coordinate coordinate in potentialCoordinates)
+            if (coordinate.isEqual(coord)) canMove = true;
 
         return canMove;
     }
@@ -82,6 +107,11 @@ public class Knight : Piece
         if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
 
         return canMove;
+    }
+
+    public override bool CanReach(Coordinate coord)
+    {
+        return IsInCaptureRange(coord);
     }
 
 }

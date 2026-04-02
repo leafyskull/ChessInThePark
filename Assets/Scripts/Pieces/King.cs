@@ -50,4 +50,9 @@ public class King : Piece
         return canMove;
     }
 
+    public override bool IsInCaptureRange(Coordinate coord)
+    {
+        return CanReach(coord);
+    }
+
 }
