@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4203314010880089181}
   - component: {fileID: 4051070385085862083}
   - component: {fileID: 3223846495075732080}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BoardTilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

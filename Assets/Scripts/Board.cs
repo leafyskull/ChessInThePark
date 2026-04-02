@@ -243,6 +243,7 @@ public class Board : MonoBehaviour
         if (captured != null)
         {
             // Handle capture (destroy, disable, etc.)
+            RemovePiece(captured);
         }
 
         // Place in new position
@@ -252,6 +253,13 @@ public class Board : MonoBehaviour
         piece.SetCoordinate(target);
         piece.SetMoved();
     }
+
+    public void RemovePiece(Piece piece)
+    {
+        // For now: Just destroy the piece
+        Destroy(piece);
+    }
+    
 
 
 

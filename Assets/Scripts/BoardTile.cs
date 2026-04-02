@@ -13,5 +13,7 @@ public class BoardTile : MonoBehaviour
 
     public Coordinate GetCoordinate() { return this.coordinate; }
 
+    
+
 
 }

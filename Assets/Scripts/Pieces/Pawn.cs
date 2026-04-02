@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 
 
@@ -53,6 +54,12 @@ public class Pawn : Piece
     {
         // TODO: Implement
         return false;
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+        Debug.Log("Child pointer down.");
     }
 
 
