@@ -16,17 +16,21 @@ public class Rook : Piece
 
         Coordinate currentCoordinate = this.GetCoordinate();
         List<Coordinate> validCoordinates = new List<Coordinate>();
-        bool canMove = false;
 
-        // For all directions:
-            // If empty, add to valid moves and move on
-            // If occupied with enemy, add to valid moves and stop
-            // If occupied with friendly, stop
+        Coordinate northNeighbor = null;
+        Coordinate southNeighbor = null;
+        Coordinate eastNeighbor = null;
+        Coordinate westNeighbor = null;
 
         // North
-        Row northRow = currentCoordinate.GetNeighborCoordinate(Direction.North).GetRow();
-        Coordinate northNeighbor = new Coordinate(currentCoordinate.GetColumn(), northRow);
-        northNeighbor = Board.Instance.GetCoordinate(northNeighbor);
+        int currentColumn = (int)currentCoordinate.GetColumn();
+        int northRow = (int)currentCoordinate.GetRow() + 1;
+        if (IsValidCoordinate(currentColumn, northRow))
+        {
+            northNeighbor = new Coordinate((Column)currentColumn, (Row)northRow);
+            northNeighbor = Board.Instance.GetCoordinate(northNeighbor);
+        }
+        
         while (northNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -39,16 +43,26 @@ public class Rook : Piece
             else
             {
                 validCoordinates.Add(northNeighbor);
-                northRow = northNeighbor.GetNeighborCoordinate(Direction.North).GetRow();
-                northNeighbor = new Coordinate(northNeighbor.GetColumn(), northRow);
-                northNeighbor = Board.Instance.GetCoordinate(northNeighbor);
+                northRow++;
+                if (IsValidCoordinate(currentColumn, northRow))
+                {
+                    northNeighbor = new Coordinate(northNeighbor.GetColumn(), (Row)northRow);
+                    northNeighbor = board.GetCoordinate(northNeighbor);
+                } else
+                {
+                    northNeighbor = null;
+                }
             }
         }
 
         // South
-        Row southRow = currentCoordinate.GetNeighborCoordinate(Direction.South).GetRow();
-        Coordinate southNeighbor = new Coordinate(currentCoordinate.GetColumn(), southRow);
-        southNeighbor = Board.Instance.GetCoordinate(southNeighbor);
+        int southRow = (int)currentCoordinate.GetRow() - 1;
+        if (IsValidCoordinate(currentColumn, southRow))
+        {
+            southNeighbor = new Coordinate((Column)currentColumn, (Row)southRow);
+            southNeighbor = board.GetCoordinate(southNeighbor);
+        }
+        
         while(southNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -61,16 +75,27 @@ public class Rook : Piece
             else
             {
                 validCoordinates.Add(southNeighbor);
-                southRow = northNeighbor.GetNeighborCoordinate(Direction.South).GetRow();
-                southNeighbor = new Coordinate(southNeighbor.GetColumn(), southRow);
-                southNeighbor = Board.Instance.GetCoordinate(southNeighbor);
+                southRow--;
+                if (IsValidCoordinate(currentColumn, southRow))
+                {
+                    southNeighbor = new Coordinate((Column)currentColumn, (Row)southRow);
+                    southNeighbor = board.GetCoordinate(southNeighbor);
+                } else
+                {
+                    southNeighbor = null;
+                }
             }
         }
 
         // East
-        Column eastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).GetColumn();
-        Coordinate eastNeighbor = new Coordinate(eastColumn, currentCoordinate.GetRow());
-        eastNeighbor = Board.Instance.GetCoordinate(eastNeighbor);
+        int eastColumn = (int)currentCoordinate.GetColumn() + 1;
+        int currentRow = (int)currentCoordinate.GetRow();
+        if (IsValidCoordinate(eastColumn, currentRow))
+        {
+            eastNeighbor = new Coordinate((Column)eastColumn, (Row)currentRow);
+            eastNeighbor = board.GetCoordinate(eastNeighbor);
+        }
+        
         while(eastNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -83,16 +108,26 @@ public class Rook : Piece
             else
             {
                 validCoordinates.Add(eastNeighbor);
-                eastColumn = eastNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
-                eastNeighbor = new Coordinate(eastColumn, eastNeighbor.GetRow());
-                eastNeighbor = Board.Instance.GetCoordinate(eastNeighbor);
+                eastColumn++;
+                if (IsValidCoordinate(eastColumn, currentRow))
+                {
+                    eastNeighbor = new Coordinate((Column)eastColumn, (Row)currentRow);
+                    eastNeighbor = board.GetCoordinate(eastNeighbor);
+                } else
+                {
+                    eastNeighbor = null;
+                }
             }
         }
 
         // West
-        Column westColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).GetColumn();
-        Coordinate westNeighbor = new Coordinate(westColumn, currentCoordinate.GetRow());
-        westNeighbor = Board.Instance.GetCoordinate(westNeighbor);
+        int westColumn = (int)currentCoordinate.GetColumn() - 1;
+        if (IsValidCoordinate(westColumn, currentRow))
+        {
+            westNeighbor = new Coordinate((Column)westColumn, (Row)currentRow);
+            westNeighbor = board.GetCoordinate(westNeighbor);
+        }
+        
         while(westNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -105,15 +140,22 @@ public class Rook : Piece
             else
             {
                 validCoordinates.Add(westNeighbor);
-                westColumn = westNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
-                westNeighbor = new Coordinate(westColumn, westNeighbor.GetRow());
-                westNeighbor = Board.Instance.GetCoordinate(westNeighbor);
+                westColumn--;
+                if (IsValidCoordinate(westColumn, currentRow))
+                {
+                    westNeighbor = new Coordinate((Column)westColumn, (Row)currentRow);
+                    westNeighbor = board.GetCoordinate(westNeighbor);
+                } else
+                {
+                    westNeighbor = null;
+                }
             }
         }
 
-        if (validCoordinates.Contains(coord)) canMove = true;
+        foreach (Coordinate coordinate in validCoordinates)
+            if (coordinate.isEqual(coord)) return true;
 
-        return canMove;
+        return false;
     }
 
     public override bool CanMove(Coordinate coord)
@@ -126,5 +168,10 @@ public class Rook : Piece
         if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
 
         return canMove;
+    }
+
+    public override bool IsInCaptureRange(Coordinate coord)
+    {
+        return CanReach(coord);
     }
 }

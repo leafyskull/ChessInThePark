@@ -33,8 +33,10 @@ public class King : Piece
         potentialCoordinates.Add(west);
         potentialCoordinates.Add(northWest);
 
-        if (potentialCoordinates.Contains(coord)) return true;
-        else return false;
+        foreach (Coordinate coordinate in potentialCoordinates)
+            if (coordinate.isEqual(coord)) return true;
+        
+        return false;
     }
 
     public override bool CanMove(Coordinate coord)

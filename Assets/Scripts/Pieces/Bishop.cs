@@ -14,18 +14,21 @@ public class Bishop : Piece
 
         Coordinate currentCoordinate = this.GetCoordinate();
         List<Coordinate> validCoordinates = new List<Coordinate>();
-        bool canMove = false;
 
-        // For all directions:
-            // If empty, add to valid moves and move on
-            // If occupied with enemy, add to valid moves and stop
-            // If occupied with friendly, stop
+        Coordinate northEastNeighbor = null;
+        Coordinate northWestNeighbor = null;
+        Coordinate southEastNeighbor = null;
+        Coordinate southWestNeighbor = null;
 
         // NorthEast
-        Row northEastRow = currentCoordinate.GetNeighborCoordinate(Direction.North).GetRow();
-        Column northEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).GetColumn();
-        Coordinate northEastNeighbor = new Coordinate(northEastColumn, northEastRow);
-        northEastNeighbor = board.GetCoordinate(northEastNeighbor);
+        int northEastRow = (int)currentCoordinate.GetRow() + 1;
+        int northEastColumn = (int)currentCoordinate.GetColumn() + 1;
+        if (IsValidCoordinate(northEastColumn, northEastRow))
+        {
+            northEastNeighbor = new Coordinate((Column)northEastColumn, (Row)northEastRow);
+            northEastNeighbor = board.GetCoordinate(northEastNeighbor);
+        }
+        
         while (northEastNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -38,18 +41,28 @@ public class Bishop : Piece
             if (!board.IsOccupied(northEastNeighbor))
             {
                 validCoordinates.Add(northEastNeighbor);
-                northEastRow = northEastNeighbor.GetNeighborCoordinate(Direction.North).GetRow();
-                northEastColumn = northEastNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
-                northEastNeighbor = new Coordinate(northEastColumn, northEastRow);
-                northEastNeighbor = board.GetCoordinate(northEastNeighbor);
+                northEastRow++;
+                northEastColumn++;
+                if (IsValidCoordinate(northEastColumn, northEastRow))
+                {
+                    northEastNeighbor = new Coordinate((Column)northEastColumn, (Row)northEastRow);
+                    northEastNeighbor = board.GetCoordinate(northEastNeighbor);
+                } else
+                {
+                    northEastNeighbor = null;
+                }
             }
         }
 
         // NorthWest
-        Row northWestRow = currentCoordinate.GetNeighborCoordinate(Direction.North).GetRow();
-        Column northWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).GetColumn();
-        Coordinate northWestNeighbor = new Coordinate(northWestColumn, northWestRow);
-        northWestNeighbor = board.GetCoordinate(northWestNeighbor);
+        int northWestRow = (int)currentCoordinate.GetRow() + 1;
+        int northWestColumn = (int)currentCoordinate.GetColumn() - 1;
+        if (IsValidCoordinate(northWestColumn, northWestRow))
+        {
+            northWestNeighbor = new Coordinate((Column)northWestColumn, (Row)northWestRow);
+            northWestNeighbor = board.GetCoordinate(northWestNeighbor);
+        }
+        
         while (northWestNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -62,18 +75,28 @@ public class Bishop : Piece
             if (!board.IsOccupied(northWestNeighbor))
             {
                 validCoordinates.Add(northWestNeighbor);
-                northEastRow = northWestNeighbor.GetNeighborCoordinate(Direction.North).GetRow();
-                northEastColumn = northWestNeighbor.GetNeighborCoordinate(Direction.West).GetColumn();
-                northWestNeighbor = new Coordinate(northEastColumn, northEastRow);
-                northWestNeighbor = board.GetCoordinate(northWestNeighbor);
+                northWestColumn--;
+                northWestRow++;
+                if (IsValidCoordinate(northWestColumn, northWestRow))
+                {
+                    northWestNeighbor = new Coordinate((Column)northWestColumn, (Row)northWestRow);
+                    northWestNeighbor = board.GetCoordinate(northWestNeighbor);
+                } else
+                {
+                    northWestNeighbor = null;
+                }
             }
         }
 
         // SouthEast
-        Row southEastRow = currentCoordinate.GetNeighborCoordinate(Direction.South).GetRow();
-        Column southEastColumn = currentCoordinate.GetNeighborCoordinate(Direction.East).GetColumn();
-        Coordinate southEastNeighbor = new Coordinate(southEastColumn, southEastRow);
-        southEastNeighbor = board.GetCoordinate(southEastNeighbor);
+        int southEastRow = (int)currentCoordinate.GetRow() - 1;
+        int southEastColumn = (int)currentCoordinate.GetColumn() + 1;
+        if (IsValidCoordinate(southEastColumn, southEastRow))
+        {
+            southEastNeighbor = new Coordinate((Column)southEastColumn, (Row)southEastRow);
+            southEastNeighbor = board.GetCoordinate(southEastNeighbor);
+        }
+        
         while (southEastNeighbor != null)
         {
             // Occupied - add to valid reach and stop.
@@ -86,18 +109,28 @@ public class Bishop : Piece
             if (!board.IsOccupied(southEastNeighbor))
             {
                 validCoordinates.Add(southEastNeighbor);
-                southEastRow = southEastNeighbor.GetNeighborCoordinate(Direction.South).GetRow();
-                southEastColumn = southEastNeighbor.GetNeighborCoordinate(Direction.East).GetColumn();
-                southEastNeighbor = new Coordinate(southEastColumn, southEastRow);
-                southEastNeighbor = board.GetCoordinate(southEastNeighbor);
+                southEastRow--;
+                southEastColumn++;
+                if (IsValidCoordinate(southEastColumn, southEastRow))
+                {
+                    southEastNeighbor = new Coordinate((Column)southEastColumn, (Row)southEastRow);
+                    southEastNeighbor = board.GetCoordinate(southEastNeighbor);
+                } else
+                {
+                    southEastNeighbor = null;
+                }
             }
         }
 
         // SouthWest
-        Row southWestRow = currentCoordinate.GetNeighborCoordinate(Direction.South).GetRow();
-        Column southWestColumn = currentCoordinate.GetNeighborCoordinate(Direction.West).GetColumn();
-        Coordinate southWestNeighbor = new Coordinate(southWestColumn, southWestRow);
-        southWestNeighbor = board.GetCoordinate(southWestNeighbor);
+        int southWestRow = (int)currentCoordinate.GetRow() - 1;
+        int southWestColumn = (int)currentCoordinate.GetColumn() - 1;
+        if (IsValidCoordinate(southWestColumn, southWestRow))
+        {
+            southWestNeighbor = new Coordinate((Column)southWestColumn, (Row)southWestRow);
+            southWestNeighbor = board.GetCoordinate(southWestNeighbor);
+        }
+        
         while (southWestNeighbor != null)
         {
             // Occupied - add to valid reach and stop
@@ -110,16 +143,23 @@ public class Bishop : Piece
             else
             {
                 validCoordinates.Add(southWestNeighbor);
-                southWestRow = southWestNeighbor.GetNeighborCoordinate(Direction.South).GetRow();
-                southWestColumn = southWestNeighbor.GetNeighborCoordinate(Direction.West).GetColumn();
-                southWestNeighbor = new Coordinate(southWestColumn, southWestRow);
-                southWestNeighbor = board.GetCoordinate(southWestNeighbor);
+                southWestRow--;
+                southWestColumn--;
+                if (IsValidCoordinate(southWestColumn, southWestRow))
+                {
+                    southWestNeighbor = new Coordinate((Column)southWestColumn, (Row)southWestRow);
+                    southWestNeighbor = board.GetCoordinate(southWestNeighbor);
+                } else
+                {
+                    southWestNeighbor = null;
+                }
             }
         }
 
-        if (validCoordinates.Contains(coord)) canMove = true;
+        foreach (Coordinate coordinate in validCoordinates)
+            if (coordinate.isEqual(coord)) return true;
 
-        return canMove;
+        return false;
     }
 
     public override bool CanMove(Coordinate coord)
@@ -131,6 +171,11 @@ public class Bishop : Piece
         if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
         
         return canMove;
+    }
+
+    public override bool IsInCaptureRange(Coordinate coord)
+    {
+        return CanReach(coord);
     }
 
 }

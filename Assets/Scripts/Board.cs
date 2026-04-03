@@ -183,6 +183,8 @@ public class Board : MonoBehaviour
 
     public Coordinate GetCoordinate(Coordinate coordinate)
     {
+        if (coordinate == null) return null;
+        
         int columnIndex = (int)coordinate.GetColumn();
         int rowIndex = (int)coordinate.GetRow();
         return coordinates[columnIndex, rowIndex];
@@ -254,7 +256,7 @@ public class Board : MonoBehaviour
 
         // Update piece's internal coordinate
         piece.SetCoordinate(target);
-        piece.SetMoved();
+        // piece.SetMoved();
     }
 
     public void MovePieceToTile(Piece piece, BoardTile tile)

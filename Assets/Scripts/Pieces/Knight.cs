@@ -29,7 +29,7 @@ public class Knight : Piece
 
         row = currentRow + 1;
         column = currentColumn - 2;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate OneNorthTwoWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(OneNorthTwoWest);
@@ -37,7 +37,7 @@ public class Knight : Piece
 
         row = currentRow + 2;
         column = currentColumn - 1;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate TwoNorthOneWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(TwoNorthOneWest);
@@ -45,7 +45,7 @@ public class Knight : Piece
 
         row = currentRow + 2;
         column = currentColumn + 1;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate TwoNorthOneEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(TwoNorthOneEast);
@@ -53,7 +53,7 @@ public class Knight : Piece
 
         row = currentRow + 1;
         column = currentColumn + 2;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate OneNorthTwoEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(OneNorthTwoEast);
@@ -61,7 +61,7 @@ public class Knight : Piece
 
         row = currentRow - 1;
         column = currentColumn + 2;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate OneSouthTwoEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(OneSouthTwoEast);   
@@ -69,7 +69,7 @@ public class Knight : Piece
 
         row = currentRow - 2;
         column = currentColumn + 1;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate TwoSouthOneEast = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(TwoSouthOneEast);
@@ -77,7 +77,7 @@ public class Knight : Piece
 
         row = currentRow - 2;
         column = currentColumn - 1;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate TwoSouthOneWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(TwoSouthOneWest);
@@ -85,7 +85,7 @@ public class Knight : Piece
 
         row = currentRow - 1;
         column = currentColumn - 2;
-        if (row > 0 && row < 8 && column > 0 && column < 8)
+        if (IsValidCoordinate(column, row))
         {
             Coordinate OneSouthTwoWest = board.GetCoordinate(new Coordinate((Column)column, (Row)row));
             potentialCoordinates.Add(OneSouthTwoWest);

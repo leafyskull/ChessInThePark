@@ -31,6 +31,7 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         this.color = color;
         this.coordinate = coord;
+        this.hasMoved = false;
     }
 
     public Coordinate GetCoordinate() {return this.coordinate;}
@@ -44,7 +45,6 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     public void MoveTo(Coordinate coordinate)
     {
-        hasMoved = true;
         this.coordinate = coordinate;
     }
 
@@ -163,6 +163,17 @@ public abstract class Piece : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         return null;
     }
+
+    public bool IsValidCoordinate(int column, int row)
+    {
+        bool isValidCoordinate = true;
+
+        if (column < 0 || row < 0) isValidCoordinate = false;
+        if (column > 7 || row > 7) isValidCoordinate = false;
+
+        return isValidCoordinate;
+    }
+
 
 
 
