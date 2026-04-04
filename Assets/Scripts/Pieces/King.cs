@@ -12,7 +12,6 @@ public class King : Piece
     public override bool CanReach(Coordinate coord)
     {
         Coordinate currentCoordinate = this.GetCoordinate();
-        List<Coordinate> validCoordinates = new List<Coordinate>();
         List<Coordinate> potentialCoordinates = new List<Coordinate>();
 
         Coordinate north = currentCoordinate.GetNeighborCoordinate(Direction.North);
@@ -34,7 +33,8 @@ public class King : Piece
         potentialCoordinates.Add(northWest);
 
         foreach (Coordinate coordinate in potentialCoordinates)
-            if (coordinate.isEqual(coord)) return true;
+            if (coordinate != null)
+                if (coordinate.isEqual(coord)) return true;
         
         return false;
     }
@@ -45,9 +45,22 @@ public class King : Piece
 
         bool canMove = true;
 
-        if (!CanReach(coord)) canMove = false;
-        if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
-        if (board.IsReachableByEnemy(coord, this.GetColor())) canMove = false;
+        if (!CanReach(coord)) {
+            canMove = false;
+            Debug.Log("King cannot reach coordinate!");
+        }
+
+        if (board.IsOccupiedByFriendly(coord, this.GetColor())){
+            canMove = false;
+            Debug.Log("King cannot move because coordinate is occupied by a friendly piece!");
+        }
+
+        if (board.IsReachableByEnemy(coord, this.GetColor()))
+        {
+            canMove = false;
+            Debug.Log("King cannot move because this coordinate is reachable by an enemy!");   
+        }
+
 
         return canMove;
     }

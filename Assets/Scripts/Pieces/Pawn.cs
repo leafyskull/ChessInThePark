@@ -39,7 +39,8 @@ public class Pawn : Piece
         if (doubleFront != null && !PieceHasMoved() && !board.IsOccupied(front)) validCoordinates.Add(doubleFront);
 
         foreach (Coordinate coordinate in validCoordinates){
-            if (coord.isEqual(coordinate)) canMove = true;
+            if (coord != null)
+                if (coord.isEqual(coordinate)) canMove = true;
         }
             
         return canMove;

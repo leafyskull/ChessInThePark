@@ -115,6 +115,8 @@ public class Coordinate
 
     public bool isEqual(Coordinate coordinate)
     {
+        if (coordinate == null) return false;
+
         int thisCol = (int)this.column;
         int thisRow = (int)this.row;
 

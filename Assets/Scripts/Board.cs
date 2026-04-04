@@ -258,7 +258,7 @@ public class Board : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (piece.CanReach(coord) && piece.GetColor() != pieceColor)
+            if (piece.IsInCaptureRange(coord) && piece.GetColor() != pieceColor)
                 isReachableByEnemy = true;
         }
 

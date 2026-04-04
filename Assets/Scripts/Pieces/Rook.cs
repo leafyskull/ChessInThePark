@@ -153,7 +153,8 @@ public class Rook : Piece
         }
 
         foreach (Coordinate coordinate in validCoordinates)
-            if (coordinate.isEqual(coord)) return true;
+            if (coordinate != null)
+                if (coordinate.isEqual(coord)) return true;
 
         return false;
     }
