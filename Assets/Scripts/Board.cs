@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Unity.Collections;
@@ -85,6 +86,34 @@ public class Board : MonoBehaviour
         // Center Camera on board
         Vector3 boardCenter = boardOrigin + new Vector3((numColumns * tileSize) / 2, (numRows * tileSize) / 2, 0);
         Camera.main.transform.position = new Vector3(boardCenter.x, boardCenter.y, Camera.main.transform.position.z);
+    }
+
+    public void Reset()
+    {
+        // Destroy all pieces
+        foreach (Piece piece in pieces)
+        {
+            this.RemovePiece(piece);
+        }
+        pieces.Clear();
+
+        // Destroy all coordinates
+        for (int i = 0; i < numColumns; i++)
+        {
+            for (int j = 0; j < numRows; j++)
+            {
+                Column column = (Column)i;
+                Row row = (Row)j;
+                coordinates[i, j] = null;
+                
+                Debug.Log($"Destroyed coordinate {column}{row}");
+            }
+        }
+
+        // Destroy all BoardTiles
+
+        // Do initialization
+        Start();
     }
 
     private void GenerateBoardVisuals()
@@ -184,7 +213,7 @@ public class Board : MonoBehaviour
     public Coordinate GetCoordinate(Coordinate coordinate)
     {
         if (coordinate == null) return null;
-        
+
         int columnIndex = (int)coordinate.GetColumn();
         int rowIndex = (int)coordinate.GetRow();
         return coordinates[columnIndex, rowIndex];
@@ -286,7 +315,102 @@ public class Board : MonoBehaviour
     public void RemovePiece(Piece piece)
     {
         // For now: Just destroy the piece
+        int pieceRow = (int)piece.GetCoordinate().GetRow();
+        int pieceCol = (int)piece.GetCoordinate().GetColumn();
+
+        // Remove from grid
+        pieceGrid[pieceCol, pieceRow] = null;
+
+        // TEMP: Destroy piece object
         Destroy(piece.gameObject);
+    }
+
+    // CanKingMove(): Checks if a king is able to move, and not be in check.
+    public bool CanKingMove(Coordinate coordinate, Piece kingPiece)
+    {
+        Color kingColor = kingPiece.GetColor();
+
+        bool isValidMove = true;
+
+        foreach (Piece piece in pieces)
+        {
+            if (piece.GetColor() != kingColor)
+            {
+                if (piece.CanMove(coordinate)) isValidMove = false;
+            }
+        }
+
+        if (isValidMove == false)
+            Debug.Log("King cannot move!");
+
+        return isValidMove;
+    }
+
+    // KingIsInCheck(): Checks if a given king is currently in check.
+    public bool KingIsInCheck(Piece kingPiece)
+    {
+        Color kingColor = kingPiece.GetColor();
+
+        Coordinate currentCoordinate = kingPiece.GetCoordinate();
+        bool isInCheck = false;
+
+        foreach(Piece piece in pieces)
+        {
+            if (piece.GetColor() != kingColor)
+                if (piece.CanMove(currentCoordinate)) isInCheck = true;
+        }
+
+        Debug.Log("King is in check!");
+
+        return isInCheck;
+    }
+
+    // KingIsInCheckMate(): Determines if a given king is currently in checkmate.
+    //
+    // kingPiece: The king to check
+    // kingColor: The color of the king to check.
+    public bool KingIsInCheckmate(Piece kingPiece)
+    {
+        // Idea:
+        // Assume true
+        // if king is not in check -> false
+        // if king has a move that would make them not be in check -> false
+
+        bool isInCheckMate = true;
+
+        if (!KingIsInCheck(kingPiece)) isInCheckMate = false;
+        
+        // Possible moves
+        Coordinate currentCoordinate = kingPiece.GetCoordinate();
+
+        Coordinate N = currentCoordinate.GetNeighborCoordinate(Direction.North);
+        Coordinate NE = currentCoordinate.GetNeighborCoordinate(Direction.NorthEast);
+        Coordinate E = currentCoordinate.GetNeighborCoordinate(Direction.East);
+        Coordinate SE = currentCoordinate.GetNeighborCoordinate(Direction.SouthEast);
+        Coordinate S = currentCoordinate.GetNeighborCoordinate(Direction.South);
+        Coordinate SW = currentCoordinate.GetNeighborCoordinate(Direction.SouthWest);
+        Coordinate W = currentCoordinate.GetNeighborCoordinate(Direction.West);
+        Coordinate NW = currentCoordinate.GetNeighborCoordinate(Direction.NorthWest);
+
+        List<Coordinate> neighborCoordinates = new List<Coordinate>();
+        neighborCoordinates.Add(N);
+        neighborCoordinates.Add(NE);
+        neighborCoordinates.Add(E);
+        neighborCoordinates.Add(SE);
+        neighborCoordinates.Add(S);
+        neighborCoordinates.Add(SW);
+        neighborCoordinates.Add(W);
+        neighborCoordinates.Add(NW);
+
+        foreach (Coordinate coordinate in neighborCoordinates)
+        {
+            if (coordinate != null)
+                if (CanKingMove(coordinate, kingPiece)) isInCheckMate = false;
+        }
+
+        Debug.Log("King is in checkmate!");
+
+        return isInCheckMate;
     }
     
 
