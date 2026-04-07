@@ -55,11 +55,18 @@ public class King : Piece
             Debug.Log("King cannot move because coordinate is occupied by a friendly piece!");
         }
 
+        if (!board.CanKingMove(coord, this)){
+            canMove = false;
+            Debug.Log("King is unable to move to this space!");
+        }
+
         if (board.IsReachableByEnemy(coord, this.GetColor()))
         {
             canMove = false;
             Debug.Log("King cannot move because this coordinate is reachable by an enemy!");   
         }
+
+        if (board.WillMovePutKingInCheck(this, coord)) canMove = false;        
 
 
         return canMove;

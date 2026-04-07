@@ -45,6 +45,9 @@ public class Board : MonoBehaviour
     [SerializeField] private Piece whiteKingPrefab;
     [SerializeField] private Piece blackKingPrefab;
 
+    private King whiteKingReference;
+    private King blackKingReference;
+
 
 
     void Awake()
@@ -347,15 +350,19 @@ public class Board : MonoBehaviour
     }
 
     // KingIsInCheck(): Checks if a given king is currently in check.
-    public bool KingIsInCheck(Piece kingPiece)
+    public bool KingIsInCheck(Piece kingPiece, Piece[,] pieceGridToCheck)
     {
+        if (pieceGridToCheck == null) pieceGridToCheck = pieceGrid;
+
         Color kingColor = kingPiece.GetColor();
 
         Coordinate currentCoordinate = kingPiece.GetCoordinate();
         bool isInCheck = false;
 
-        foreach(Piece piece in pieces)
+        foreach(Piece piece in pieceGridToCheck)
         {
+            if (piece == null) continue;
+
             if (piece.GetColor() != kingColor)
                 if (piece.CanMove(currentCoordinate)) isInCheck = true;
         }
@@ -363,6 +370,30 @@ public class Board : MonoBehaviour
         Debug.Log("King is in check!");
 
         return isInCheck;
+    }
+
+    // WillMovePutKingInCheck():
+    // Idea: Simulate move, check if king is in check.
+    //
+    // piece: The piece to move
+    // coord: The coordinate we are attempting to move piece to
+    public bool WillMovePutKingInCheck(Piece piece, Coordinate coord)
+    {
+        Piece[,] piecesCopy = pieceGrid;
+        Color kingColor = piece.GetColor();
+        King kingPiece = kingColor == Color.White ? whiteKingReference : blackKingReference;
+
+        foreach (Piece pieceCopy in piecesCopy)
+        {
+            if (pieceCopy.GetCoordinate().isEqual(piece.GetCoordinate()))
+            {
+                pieceCopy.MoveTo(coord);
+            }
+        }
+
+        bool isKingInCheck = KingIsInCheck(kingPiece, piecesCopy);
+
+        return isKingInCheck;
     }
 
     // KingIsInCheckMate(): Determines if a given king is currently in checkmate.
@@ -378,7 +409,7 @@ public class Board : MonoBehaviour
 
         bool isInCheckMate = true;
 
-        if (!KingIsInCheck(kingPiece)) isInCheckMate = false;
+        if (!KingIsInCheck(kingPiece, pieceGrid)) isInCheckMate = false;
         
         // Possible moves
         Coordinate currentCoordinate = kingPiece.GetCoordinate();

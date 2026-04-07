@@ -29,6 +29,7 @@ public class Queen : Piece
 
         if (!CanReach(coord)) canMove = false;
         if (board.IsOccupiedByFriendly(coord, this.GetColor())) canMove = false;
+        if (board.WillMovePutKingInCheck(this, coord)) canMove = false;
 
         return canMove;
     }

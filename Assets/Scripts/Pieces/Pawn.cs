@@ -88,6 +88,7 @@ public class Pawn : Piece
 
         if (CanReach(coord) && !board.IsOccupied(coord)) canMove = true;
         if (IsInCaptureRange(coord) && board.IsOccupiedByEnemy(coord, this.GetColor())) canMove = true;
+        if (board.WillMovePutKingInCheck(this, coord)) canMove = false;
 
         return canMove;
     }

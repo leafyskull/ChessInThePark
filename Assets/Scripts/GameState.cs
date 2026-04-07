@@ -17,7 +17,6 @@ public class GameState
     Player whitePlayer = new Player();
     Player blackPlayer = new Player();
     private GameStateEnum currentState;
-
     Board board = Board.Instance;
 
     public void NewGame()
